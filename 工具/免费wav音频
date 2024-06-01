@@ -1,1 +1,36 @@
+Google Text-to-Speech用WaveNet神经网络整出来的声音过于好听，以至于非常适合代替懒狗充当PPT或者短视频的旁白，但是试用TTS的页面上并没有下载音频文件的选项，因此提取音频文件需要额外几个步骤。
 
+启动Chrome，要用谷歌的软件薅谷歌的羊毛。按下F12启动万能的调试工具，切换到Network选项卡，然后按下页面中的Speak it，接着就在调试工具里观察到一个proxy?url=的文件在传输，对着这个文件右键选择Copy->Copy Response，创建一个Python脚本文件（文本文档改后缀名.py即可）后粘贴。应该可以观察到和下面代码类似的东西。
+
+{
+  "audioContent": "",
+  "timepoints": [],
+  "audioConfig": {
+    "audioEncoding": "LINEAR16",
+    "speakingRate": 0,
+    "pitch": 0,
+    "volumeGainDb": 0,
+    "sampleRateHertz": 24000,
+    "effectsProfileId": []
+  }
+}
+把这个脚本修改为下面的样子并运行，就可以将音频导出为wav文件了。
+
+import base64
+
+dat = {
+  "audioContent": "",
+  "timepoints": [],
+  "audioConfig": {
+    "audioEncoding": "LINEAR16",
+    "speakingRate": 0,
+    "pitch": 0,
+    "volumeGainDb": 0,
+    "sampleRateHertz": 24000,
+    "effectsProfileId": []
+  }
+}
+
+with open("output.wav", "wb") as f:
+    f.write(base64.b64decode(dat["audioContent"]))
+现在可以愉快的把音频插入到PPT里，设置动画自动播放音频自动切换了。
